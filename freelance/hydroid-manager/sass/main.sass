@@ -1,0 +1,198 @@
+@charset 'utf-8'
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900')
+
+$deep-blue:    rgba(68, 63, 255, 1)
+$blue:         rgba(57,99, 232, 1)
+$light-blue:   rgba(75, 164, 252, 1)
+$lighter-blue: rgba(135, 195, 255, 1)
+$lipstick:     rgba(232, 65, 116, 1)
+$black:        rgba(0,0,0,1)
+$charcoal:     rgba(96,80,96,1)
+$light-grey:   rgba(226,226,226,1)
+$white:        rgba(255, 255,255,1)
+$off-white:    rgba(255, 243, 245, 1)
+$gold:         rgba(255, 202, 67, 1)
+
+$health-green:  rgba(16, 237, 134, 1)
+$health-yellow: rgba(255, 202, 67, 1)
+$health-red: rgb(255, 126, 122)
+
+$spacer: 1.25
+$space-1x: $spacer * 1rem
+$space-2x: $spacer * 2rem
+$space-3x: $spacer * 3rem
+
+html
+    font-size: 16px
+
+@mixin transition($what: all, $time: 0.2s, $how: ease-in-out)
+    -webkit-transition: $what $time $how
+    -moz-transition:    $what $time $how
+    -ms-transition:     $what $time $how
+    -o-transition:      $what $time $how
+    transition:         $what $time $how
+
+@mixin font-size($size)
+    font-size: $size * 1rem
+
+h1
+    @include font-size(2)
+    font-weight: 900
+    color: $charcoal
+
+h2
+    @include font-size(1.5)
+    font-weight: 700
+    color: $charcoal
+
+h3
+    @include font-size(1.25)
+    font-weight: 600
+    color: $charcoal
+    width: fit-content
+
+h4
+    @include font-size(1)
+    font-weight: 400
+    color: $charcoal
+
+h5
+    @include font-size(0.75)
+    font-weight: 400
+    color: $charcoal
+
+a
+    color: $light-blue
+
+a:hover
+    color: $lighter-blue
+    @include transition(all, 0.2s, ease-in-out)
+
+button
+    background: linear-gradient(90deg, #e66465, #e84174)
+    height: 50px
+    width: 300px
+    border: none
+    border-radius: 30px
+    cursor: pointer
+    h4
+        font-weight: 600
+        color: $white
+        margin: 0
+    &.cancel
+        background: $light-grey 
+        h4
+            color: $charcoal
+
+
+button:hover
+    opacity: 0.8
+    @include transition(all, 0.2s, ease-in-out)
+
+button:focus
+    outline: none
+
+body
+    background-color: $white
+    font-family: 'Montserrat'
+    
+.deep-blue
+    background-color: $deep-blue
+
+.blue
+    background-color: $blue
+
+.light-blue
+    background-color: $light-blue
+
+.lighter-blue
+    background-color: $lighter-blue
+
+.lipstick
+    background-color: $lipstick
+
+.black
+    background-color: $black
+
+.charcoal
+    background-color: $charcoal
+
+.light-grey
+    background-color: $light-grey
+
+input
+    border: 0
+    border-bottom: 2px solid black
+    border-radius: 0px
+    height: 40px
+    width: 300px
+    white-space: pre-wrap
+    margin-bottom: 20px
+    outline: none
+    outline-width: 0
+    padding: 2px
+    @include font-size(1)
+    @include transition(all, 0.2s, ease-in-out)
+    &:hover, &:focus
+        border-bottom: 2px solid #E64C66
+        border-radius: 0px
+
+.hw-health
+    display: inline-block
+    width: 300px
+    text-align: center
+    position: relative
+    .item
+        box-shadow: 3px 3px 4px 0px $light-grey
+        background-color: $deep-blue
+        border-radius: $space-1x
+        display: inline-block
+        text-align: center
+        width: 100px
+        margin: 0px 5px 0px 5px
+        h2, h5
+            color: $white
+        h5
+            font-weight: 700
+            margin-bottom: 0px
+        h2
+            margin-top: 0px
+            &.healthy
+                color: $health-green
+            &.damaged
+                color: $health-yellow
+    h4 // information below hardware status
+        margin: 20px 0px 20px 0px
+        font-weight: 600
+        text-align: center
+    .all-good
+        color: $charcoal
+
+.location-select
+    display: inline-block
+    width: 300px // to be updated
+    height: 90px // to be updated
+    background-color: $deep-blue
+    box-shadow: 3px 3px 4px 0px $light-grey
+    border-radius: $space-1x
+    .left
+        margin: 20px 0px 0px 16px
+        display: inline-block
+    .right
+        height: 50px
+        width: 4px
+        border-radius: 2px
+        margin-right: 20px
+        margin-top: 20px
+        background-color: white
+        display: inline-block
+        float: right
+
+    h4, h5
+        color: $white
+        margin: 0
+        &.status
+            color: $health-green
+            font-weight: 600
+    h4
+        font-weight: 600
