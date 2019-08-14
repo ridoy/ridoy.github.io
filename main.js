@@ -24,7 +24,7 @@ CrateDigger.prototype = {
         this.player = new YT.Player('player', {
             height: '390',
             width: '640',
-            videoId: 'o_jIJGPrj0g',
+            videoId: 'tJLGq8O4baE',
             events: {
                 'onReady': this.onPlayerReady.bind(this)
             }
