@@ -18,7 +18,8 @@ CrateDigger.prototype = {
         for (let i = 1; i < 10; i++) {
             this.pads[i] = {};
         }
-        this.attachListeners();
+        this.attachKeyListeners();
+        this.attachSearchListeners();
     },
     onYouTubeIframeAPIReady: function() {
         this.player = new YT.Player('player', {
@@ -99,6 +100,23 @@ CrateDigger.prototype = {
 
         return handle;
     },
+    attachSearchListeners: function() {
+        let $this = this;
+        let searchBar = document.getElementById('video-link-input');
+        let loadButton = document.getElementById('load-video');
+        loadButton.onclick = function() {
+            let url = searchBar.value;
+            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+            var match = url.match(regExp);
+            let videoId;
+            if (match&&match[7].length==11) {
+                videoId = match[7];
+            }
+
+            $this.player.loadVideoById(videoId);
+        }
+        
+    },
     attachHandleListeners: function() {
         let $this = this;
 
@@ -130,7 +148,7 @@ CrateDigger.prototype = {
         }
         // Negate default dragging behavior.
     },
-    attachListeners: function() {
+    attachKeyListeners: function() {
         let $this = this;
         let keys = [];
         for (let i = 1; i < 10; i++) {
