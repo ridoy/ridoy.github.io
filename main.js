@@ -25,17 +25,27 @@ CrateDigger.prototype = {
         this.player = new YT.Player('player', {
             height: '390',
             width: '640',
-            videoId: 'tJLGq8O4baE',
+            //videoId: 'tJLGq8O4baE',
             events: {
-                'onReady': this.onPlayerReady.bind(this)
+                'onReady': this.onPlayerReady.bind(this),
+                'onStateChange': this.onStateChange.bind(this)
             }
         });
+    },
+    onStateChange: function(event) {
+        if(this.player.getPlayerState() === 1) {
+            this.resetAllPads();
+        }
     },
     onPlayerReady: function(event) {
         //event.target.playVideo();
         this.renderPads();
         this.renderHandles();
         this.resetAllPads();
+        let randomInt = Math.floor(Math.random() * 10)
+        console.log(randomInt);
+        this.player.cuePlaylist('PL524cP7mxwgO2gxW7Owwp8U0ZPX_8NTkz', randomInt);
+
     },
     renderPads: function() {
         let padsContainerHtml = document.getElementById('pads');
