@@ -6,6 +6,7 @@ CrateDigger.prototype = {
         const colors = ['#d2f7f5', '#ffc4c8', '#b9edce'];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         document.body.style.backgroundColor = randomColor;
+        this.randomVids = ['NTKm1r0chcM','cOtpFkNIHcU','3zN7M5o2D1A','2-n2T4hAR14','GnY_iGiwhAY','LhH4FltFnWk','m4B808xRP3k','ojqgDoHQOCI','HciMsdrDgkE','NgRBZTo9SH4','E1rmG1syhFg','2cB9szCRiy4','KHWo-e-wgdY','BBAj8e6osf0','HXBD2o5lO1k','rA1szVDuak4','11gUJQgdPxU','R55Ht7G3g14','Bppib7KyjG0','Y1WuWl7T8X4','UGeQvHzNsnY','Q-vRj-sL8fI','atTHGvUEwu0','1ohBWtXKs7A','bHqrhWlTemM','AlpJFdMLIr4','N3Gg7ZJHF48','iyc0JBYF_h4','j4a87eWIgCQ','iutAo2Ppiro','lrtL5jgriYg','u0cXTr1dXJ0','YrLWAzLM1qw','JNcnbVgxSB0','EcE2fYPFpjA','NrS0VLanzKg','eybbtmw4oqo','rcgwXj-ULxc','wiDVfi5dVp0','MuNRbxKAJII','jifb-DuqrbE','dgodkV4EstI','5Ah8GivE3xg','XECq0l3fYjc','cSgIBlMVpJ0','kPbVenisik0','cuzrLHtvjmU','DxibGYf97ek','Oy_C7C7-5Io','Fded4j9_-ck']
         
         // inject youtube iframe api
         let tag = document.createElement('script');
@@ -25,7 +26,7 @@ CrateDigger.prototype = {
         this.player = new YT.Player('player', {
             height: '390',
             width: '640',
-            //videoId: 'tJLGq8O4baE',
+            videoId: 'tJLGq8O4baE',
             events: {
                 'onReady': this.onPlayerReady.bind(this),
                 'onStateChange': this.onStateChange.bind(this)
@@ -43,9 +44,6 @@ CrateDigger.prototype = {
         this.renderHandles();
         this.resetAllPads();
         let randomInt = Math.floor(Math.random() * 10)
-        console.log(randomInt);
-        this.player.cuePlaylist('PL524cP7mxwgO2gxW7Owwp8U0ZPX_8NTkz', randomInt);
-
     },
     renderPads: function() {
         let padsContainerHtml = document.getElementById('pads');
@@ -114,6 +112,7 @@ CrateDigger.prototype = {
         let $this = this;
         let searchBar = document.getElementById('video-link-input');
         let loadButton = document.getElementById('load-video');
+        let randomButton = document.getElementById('random-video');
         loadButton.onclick = function() {
             let url = searchBar.value;
             var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
@@ -124,6 +123,10 @@ CrateDigger.prototype = {
             }
 
             $this.player.loadVideoById(videoId);
+        }
+        randomButton.onclick = function() {
+            let random = Math.floor(Math.random() * $this.randomVids.length);
+            $this.player.loadVideoById($this.randomVids[random]);
         }
         
     },
