@@ -9,10 +9,11 @@
 }
 
 body {
-    background-color: #0a080e;
+    background-color: #110f1b;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     color: white;
+    -webkit-font-smoothing: antialiased;
 }
 
 
@@ -50,7 +51,7 @@ hr {
 .container {
     margin-left: 100px;
     margin-right: 100px;
-    width: 600px;
+    width: 1200px;
     margin: 0 auto;
     display: block;
 }
@@ -72,6 +73,10 @@ hr {
     font-weight: 400;
     width: 800px;
     text-align: center;
+}
+
+.section-features {
+    margin-top: 100px;
 }
 
 @media (max-width: 823px) {
@@ -97,7 +102,7 @@ hr {
 
 
 .section-header::after {
-    background-image: linear-gradient(180deg,rgba(11,12,17,0),#0a080e),url("./img/endtroducing.jpeg");
+    background-image: linear-gradient(180deg,rgba(11,12,17,0),#110f1b),url("./img/endtroducing.jpeg");
     content: "";
     background-size: cover;
     height: 50vh;
@@ -110,15 +115,12 @@ hr {
     z-index: -1;
 }
 
-.section-image > img {
-    display: block;
-    margin: 0 auto;
-    margin-top: 50px;
-}
-
 .section-links {
     text-align: center;
 }
+
+a { color: white; }
+a:hover { color: pink; }
 
 .download-link {
     transition: background-color .2s;
@@ -142,6 +144,7 @@ hr {
 }
 
 .download-link:hover {
+    color: white;
     transition: transform .2s ease-in-out;
     transform: scale(1.05);
     background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
@@ -174,4 +177,46 @@ hr {
     0%{background-position:0% 82%}
     50%{background-position:100% 19%}
     100%{background-position:0% 82%}
+}
+
+
+.caption h2 {
+    font-family: 'Dela Gothic One', cursive;
+}
+
+
+.row {
+    display: flex;
+}
+
+.row .col {
+    box-sizing: border-box;
+    padding: 0;
+    flex-grow: 1;
+    height: 100%;
+    padding: 10px 6rem;
+}
+
+.caption, .section-image {
+    display: inline-block;
+}
+
+.caption {
+    vertical-align: top;
+}
+
+.row-alt > * {
+
+}
+
+.section-features .features-heading {
+    text-align: center;
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 50px;
+}
+
+@media (max-width: 600px) {
+    .row .col {
+        padding: 10px;
+    }
 }
