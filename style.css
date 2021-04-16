@@ -9,7 +9,7 @@
 }
 
 body {
-    background-color: #0b0319;
+    background-color: #0a080e;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     color: white;
@@ -52,7 +52,7 @@ h2 {
 }
 
 .section-header::after {
-    background-image: linear-gradient(180deg,rgba(11,12,17,0),#0b0319),url("./img/endtroducing.jpeg");
+    background-image: linear-gradient(180deg,rgba(11,12,17,0),#0a080e),url("./img/endtroducing.jpeg");
     content: "";
     background-size: cover;
     height: 50vh;
