@@ -1,9 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+@font-face {
+    font-family: 'Montserrat';
+    src: url('font/Montserrat/Montserrat-Regular.ttf');
+}
 
+@font-face {
+    font-family: 'Dela Gothic One';
+    src: url('font/Dela_Gothic_One/DelaGothicOne-Regular.ttf');
+}
 
 body {
-    background-color: #15122d;
+    background-color: #020108;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     color: white;
@@ -12,7 +18,7 @@ body {
 
 h1 {
     font-family: 'Dela Gothic One', cursive;
-    font-size: 40px;
+    font-size: 50px;
 }
 
 h2 {
@@ -38,8 +44,24 @@ h2 {
 }
 
 .section-header {
+    display: block;
+    margin: 0 auto;
+    //width: 600px;
     margin-top: 100px;
     font-weight: 400;
+}
+
+.section-header::after {
+    background-image: linear-gradient(180deg,rgba(11,12,17,0),#0b0c11),url("./img/endtroducing.jpeg");
+    content: "";
+    background-size: cover;
+    opacity: .3;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
 }
 
 .section-image > img {
@@ -57,7 +79,7 @@ h2 {
 }
 
 .download-link {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 700;
     display: inline-block;
     color: #4aa2ec;
