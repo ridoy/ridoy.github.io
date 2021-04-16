@@ -16,13 +16,35 @@ body {
 }
 
 
-h1 {
+.welcome-to {
+    display:block;
     font-family: 'Dela Gothic One', cursive;
-    font-size: 50px;
+    font-size: 45px;
+}
+
+.main-heading {
+    display: inline-block;
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 80px;
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+background-size: 1800% 1800%;
+
+-webkit-animation: rainbow 18s ease infinite;
+-z-animation: rainbow 18s ease infinite;
+-o-animation: rainbow 18s ease infinite;
+  animation: rainbow 18s ease infinite;
 }
 
 h2 {
     font-size: 30px;
+
+}
+
+hr {
+    border: 1px solid white;
+    width: 300px;
 }
 
 .container {
@@ -33,7 +55,26 @@ h2 {
     display: block;
 }
 
-@media (max-width: 600px) {
+.cd-badge {
+    vertical-align: top;
+    position: absolute;
+    font-size: 1.2rem;
+    font-weight: 400;
+    display: inline-block;
+    background-color: #10ace8;
+    border-radius: 200rem;
+    padding: .3rem .8rem;
+}
+.section-header {
+    display: block;
+    margin: 0 auto;
+    margin-top: 100px;
+    font-weight: 400;
+    width: 800px;
+    text-align: center;
+}
+
+@media (max-width: 823px) {
     .container {
         margin-left: 30px;
         margin-right: 30px;
@@ -41,15 +82,19 @@ h2 {
         margin: 0 auto;
         display: block;
     }
+    .section-header {
+        width: 600px;
+    }
+    .main-heading {
+        font-size: 50px;
+    }
+}
+@media (max-width: 600px) {
+    .section-header {
+        width: 400px;
+    }
 }
 
-.section-header {
-    display: block;
-    margin: 0 auto;
-    //width: 600px;
-    margin-top: 100px;
-    font-weight: 400;
-}
 
 .section-header::after {
     background-image: linear-gradient(180deg,rgba(11,12,17,0),#0a080e),url("./img/endtroducing.jpeg");
@@ -71,23 +116,62 @@ h2 {
     margin-top: 50px;
 }
 
-.section-header > h1, .section-header > h2 {
-    text-align: center;
-}
-
 .section-links {
     text-align: center;
 }
 
 .download-link {
-    font-size: 30px;
+    transition: background-color .2s;
+    font-size: 25px;
     font-weight: 700;
     display: inline-block;
-    color: #4aa2ec;
-    transition: color .2s;
+    color: #222;
+    background-color: white;
+    text-decoration: none;
+    padding: 16px 20px 16px 20px;
+}
+
+.download-link-mac {
+    border-radius: 0px 20px 20px 0px;
+    margin-left: 5px;
+}
+
+.download-link-win {
+    border-radius: 20px 0px 0px 20px;
+    margin-right: 5px;
 }
 
 .download-link:hover {
-    color: #136db9;
-    transition: color .2s;
+    transition: transform .2s ease-in-out;
+    transform: scale(1.05);
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1800% 1800%;
+
+    -webkit-animation: rainbow 18s ease infinite;
+    -z-animation: rainbow 18s ease infinite;
+    -o-animation: rainbow 18s ease infinite;
+      animation: rainbow 18s ease infinite;
+}
+
+
+
+@-webkit-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-moz-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-o-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
 }
