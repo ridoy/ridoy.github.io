@@ -79,6 +79,7 @@ hr {
 
 .section-features {
     margin-top: 100px;
+    margin-bottom: 100px;
 }
 
 @media (max-width: 823px) {
@@ -182,10 +183,8 @@ a:hover { color: pink; }
 }
 
 
-.section-features .features-heading {
-    text-align: center;
+.caption h2 {
     font-family: 'Dela Gothic One', cursive;
-    font-size: 50px;
 }
 
 
@@ -197,7 +196,7 @@ a:hover { color: pink; }
 
 .row .col {
     flex-grow: 1;
-    max-width: 400px;
+    max-width: 370px;
     height: 100%;
 }
 
@@ -209,17 +208,20 @@ a:hover { color: pink; }
     vertical-align: top;
 }
 
-.caption h2 {
-    font-family: 'Dela Gothic One', cursive;
-}
-
-.row .caption {
+.row-regular .caption {
     padding-left: 20px;
+    padding-right: 5px;
 }
 
+.section-features .features-heading {
+    text-align: center;
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 50px;
+}
 .row-alt .caption {
     order: 1;
     padding-right: 20px;
+    padding-left: 5px;
 }
 .row-alt .section-image {
     order: 2;
