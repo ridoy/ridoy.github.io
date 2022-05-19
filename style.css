@@ -9,9 +9,10 @@
 }
 
 body {
+    background-color: #110f1b;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
-    color: black;
+    color: white;
     -webkit-font-smoothing: antialiased;
     margin: 0;
     padding: 0;
@@ -73,6 +74,7 @@ hr {
     margin-top: 100px;
     font-weight: 400;
     width: 824px;
+    text-align: center;
 }
 
 .section-features {
@@ -103,6 +105,7 @@ hr {
 
 
 .section-header::after {
+    background-image: linear-gradient(180deg,rgba(11,12,17,0),#110f1b),url("./img/endtroducing.jpeg");
     content: "";
     background-size: cover;
     height: 50vh;
@@ -116,9 +119,11 @@ hr {
 }
 
 .section-links {
+    text-align: center;
 }
 
-a { color: black; }
+a { color: white; }
+a:hover { color: pink; }
 
 .download-link {
     transition: background-color .2s;
@@ -186,6 +191,7 @@ a { color: black; }
 .row {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .row .col {
@@ -208,6 +214,7 @@ a { color: black; }
 }
 
 .section-features .features-heading {
+    text-align: center;
     font-family: 'Dela Gothic One', cursive;
     font-size: 50px;
 }
