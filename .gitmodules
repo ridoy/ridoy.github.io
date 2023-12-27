@@ -1,3 +1,6 @@
 [submodule "cutup"]
 	path = cutup
 	url = https://github.com/ridoy/cutup
+[submodule "weirdo-tetris"]
+	path = weirdo-tetris
+	url = https://github.com/ridoy/weirdo-tetris/
