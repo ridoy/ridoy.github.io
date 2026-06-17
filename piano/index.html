@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>piano</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 40px;
+            font-family: monospace;
+            background: #F0F8FF;
+        }
+
+        @media (max-width: 600px) {
+            body { margin: 20px; }
+        }
+
+        h1 { color: grey; font-size: 30px; margin-bottom: 4px; }
+        a { color: inherit; }
+        p { font-size: 14px; }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+
+        .controls label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        select {
+            font-family: monospace;
+            font-size: 13px;
+            border: 1px solid #bbb;
+            background: white;
+            padding: 2px 4px;
+        }
+
+        input[type=range] {
+            width: 80px;
+            cursor: pointer;
+        }
+
+        button {
+            font-family: monospace;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 2px 8px;
+            border: 1px solid #bbb;
+            background: white;
+        }
+
+        button:hover { background: #f0f0f0; }
+
+        #oct-display {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+        }
+
+        .piano-wrap {
+            overflow-x: auto;
+            max-width: 100%;
+            padding-bottom: 8px;
+        }
+
+        .keyboard {
+            position: relative;
+            display: inline-flex;
+            user-select: none;
+            border-left: 2px solid #999;
+            border-right: 2px solid #999;
+            border-bottom: 2px solid #999;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .white-key {
+            width: 42px;
+            height: 168px;
+            background: white;
+            border-right: 1px solid #ccc;
+            border-bottom: 2px solid #ccc;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 8px;
+            box-sizing: border-box;
+            border-radius: 0 0 3px 3px;
+            position: relative;
+            transition: background 0.04s;
+        }
+
+        .white-key:last-child { border-right: none; }
+        .white-key:hover { background: #f8f8ff; }
+        .white-key.active { background: #c5d5ff; }
+
+        .wk-label {
+            font-size: 10px;
+            color: #bbb;
+            line-height: 1;
+        }
+
+        .wk-note {
+            font-size: 9px;
+            color: #ddd;
+            margin-top: 3px;
+            line-height: 1;
+        }
+
+        .white-key.c-key .wk-note { color: #ccc; }
+
+        .black-key {
+            position: absolute;
+            top: 0;
+            width: 28px;
+            height: 108px;
+            background: #1c1c1c;
+            border-radius: 0 0 4px 4px;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 7px;
+            box-sizing: border-box;
+            box-shadow: 0 5px 8px rgba(0,0,0,0.45), inset 0 -2px 3px rgba(255,255,255,0.07);
+            transition: background 0.04s;
+        }
+
+        .black-key:hover { background: #2e2e2e; }
+        .black-key.active { background: #3a3a5a; }
+
+        .bk-label {
+            font-size: 9px;
+            color: #666;
+            line-height: 1;
+        }
+
+        .hint {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 14px;
+            line-height: 1.8;
+        }
+
+        .hint b { color: #888; }
+
+        #sustain-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-right: 4px;
+            vertical-align: middle;
+            transition: background 0.1s;
+        }
+
+        #sustain-indicator.on { background: #88aaff; }
+    </style>
+</head>
+<body>
+    <h1>piano</h1>
+    <p><a href="/">← back</a></p>
+
+    <div class="controls">
+        <label>wave:
+            <select id="waveform">
+                <option value="triangle" selected>triangle</option>
+                <option value="sine">sine</option>
+                <option value="square">square</option>
+                <option value="sawtooth">sawtooth</option>
+            </select>
+        </label>
+
+        <label>volume:
+            <input type="range" id="volume" min="0" max="1" step="0.05" value="0.5">
+        </label>
+
+        <label>octave:
+            <button id="oct-down">−</button>
+            <span id="oct-display">4</span>
+            <button id="oct-up">+</button>
+        </label>
+
+        <span><span id="sustain-indicator"></span>sustain</span>
+    </div>
+
+    <div class="piano-wrap">
+        <div class="keyboard" id="keyboard"></div>
+    </div>
+
+    <div class="hint">
+        keyboard: <b>a s d f g h j k l ; ' z x c</b> (white) &nbsp;·&nbsp;
+        <b>w e t y u o p [ ]</b> (black)<br>
+        <b>← →</b> shift octave &nbsp;·&nbsp; <b>space</b> sustain pedal
+    </div>
+
+    <script>
+    (function () {
+        let audioCtx = null;
+        const held = {};       // noteId -> {osc, gain, el}
+        const sustained = {};  // noteId -> {osc, gain, el} — sustaining after release
+        let octave = 4;
+        let sustainOn = false;
+
+        const W = 42, BW = 28;
+
+        // Semitone offsets from C for white/black keys
+        const W_SEMI  = [0, 2, 4, 5, 7, 9, 11];
+        const W_NAMES = ['C','D','E','F','G','A','B'];
+        const B_SEMI  = [1, 3, null, 6, 8, 10, null];
+        const B_NAMES = ['C#','D#',null,'F#','G#','A#',null];
+
+        // Keyboard → white key index (14 keys = 2 octaves)
+        const WK = ['a','s','d','f','g','h','j','k','l',';',"'",'z','x','c'];
+        // Keyboard → black key, indexed by white key position i=0..12
+        const BK = ['w','e',null,'t','y','u',null,'o','p',null,'[',null,']',null];
+
+        function ctx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+
+        function midiFreq(midi) {
+            return 440 * Math.pow(2, (midi - 69) / 12);
+        }
+
+        function midiOf(oct, semi) {
+            return 12 + oct * 12 + semi;
+        }
+
+        function startNote(midi, id, el) {
+            if (held[id]) return;
+
+            // If sustaining this note, kill the sustain first
+            if (sustained[id]) releaseSustained(id);
+
+            const c = ctx();
+            const osc = c.createOscillator();
+            const gain = c.createGain();
+
+            osc.type = document.getElementById('waveform').value;
+            osc.frequency.value = midiFreq(midi);
+
+            const vol = parseFloat(document.getElementById('volume').value) * 0.35;
+            gain.gain.setValueAtTime(0, c.currentTime);
+            gain.gain.linearRampToValueAtTime(vol, c.currentTime + 0.008);
+
+            osc.connect(gain);
+            gain.connect(c.destination);
+            osc.start();
+
+            held[id] = { osc, gain, el, midi };
+            el && el.classList.add('active');
+        }
+
+        function stopNote(id) {
+            if (!held[id]) return;
+            const { osc, gain, el } = held[id];
+
+            if (sustainOn) {
+                // Hand off to sustained
+                sustained[id] = held[id];
+            } else {
+                release(osc, gain);
+                el && el.classList.remove('active');
+            }
+            delete held[id];
+        }
+
+        function release(osc, gain) {
+            const c = ctx();
+            const now = c.currentTime;
+            gain.gain.setValueAtTime(gain.gain.value, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+            osc.stop(now + 0.5);
+        }
+
+        function releaseSustained(id) {
+            if (!sustained[id]) return;
+            const { osc, gain, el } = sustained[id];
+            release(osc, gain);
+            el && el.classList.remove('active');
+            delete sustained[id];
+        }
+
+        function releaseSustainPedal() {
+            Object.keys(sustained).forEach(releaseSustained);
+        }
+
+        function stopAll() {
+            Object.keys(held).forEach(id => {
+                const { osc, gain, el } = held[id];
+                release(osc, gain);
+                el && el.classList.remove('active');
+                delete held[id];
+            });
+            releaseSustainPedal();
+        }
+
+        function build() {
+            const kb = document.getElementById('keyboard');
+            kb.innerHTML = '';
+
+            const totalWhite = 14; // 2 octaves
+
+            kb.style.height = '168px';
+
+            for (let i = 0; i < totalWhite; i++) {
+                const oOff = Math.floor(i / 7);
+                const ni   = i % 7;
+                const oct_n = octave + oOff;
+                const name  = W_NAMES[ni];
+                const midi  = midiOf(oct_n, W_SEMI[ni]);
+                const id    = name + oct_n;
+                const kLabel = i < WK.length ? WK[i] : '';
+
+                const el = document.createElement('div');
+                el.className = 'white-key' + (ni === 0 ? ' c-key' : '');
+                el.dataset.id   = id;
+                el.dataset.midi = midi;
+                el.innerHTML =
+                    `<span class="wk-label">${kLabel}</span>` +
+                    `<span class="wk-note">${name}${oct_n}</span>`;
+
+                el.addEventListener('mousedown', () => startNote(midi, id, el));
+                el.addEventListener('mouseup',   () => stopNote(id));
+                el.addEventListener('mouseleave',() => stopNote(id));
+                el.addEventListener('touchstart', e => { e.preventDefault(); startNote(midi, id, el); }, {passive:false});
+                el.addEventListener('touchend',   e => { e.preventDefault(); stopNote(id); },           {passive:false});
+
+                kb.appendChild(el);
+            }
+
+            // Black keys (positioned absolutely relative to kb)
+            for (let i = 0; i < totalWhite - 1; i++) {
+                const ni = i % 7;
+                if (B_SEMI[ni] === null) continue;
+
+                const oOff  = Math.floor(i / 7);
+                const oct_n = octave + oOff;
+                const name  = B_NAMES[ni];
+                const midi  = midiOf(oct_n, B_SEMI[ni]);
+                const id    = name + oct_n;
+                const kLabel = (i < BK.length && BK[i]) ? BK[i] : '';
+
+                const el = document.createElement('div');
+                el.className = 'black-key';
+                el.dataset.id   = id;
+                el.dataset.midi = midi;
+                // Center between white key i and i+1
+                el.style.left = ((i + 1) * W - BW / 2) + 'px';
+                el.innerHTML = `<span class="bk-label">${kLabel}</span>`;
+
+                el.addEventListener('mousedown', e => { e.stopPropagation(); startNote(midi, id, el); });
+                el.addEventListener('mouseup',   e => { e.stopPropagation(); stopNote(id); });
+                el.addEventListener('mouseleave',() => stopNote(id));
+                el.addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); startNote(midi, id, el); }, {passive:false});
+                el.addEventListener('touchend',   e => { e.preventDefault(); e.stopPropagation(); stopNote(id); },           {passive:false});
+
+                kb.appendChild(el);
+            }
+        }
+
+        // Build key → noteId map from current octave
+        function keyMap() {
+            const totalWhite = 14;
+            const map = {};
+
+            for (let i = 0; i < totalWhite; i++) {
+                if (!WK[i]) continue;
+                const oOff  = Math.floor(i / 7);
+                const ni    = i % 7;
+                const oct_n = octave + oOff;
+                map[WK[i]] = { id: W_NAMES[ni] + oct_n, midi: midiOf(oct_n, W_SEMI[ni]) };
+            }
+            for (let i = 0; i < totalWhite - 1; i++) {
+                const ni = i % 7;
+                if (B_SEMI[ni] === null || !BK[i]) continue;
+                const oOff  = Math.floor(i / 7);
+                const oct_n = octave + oOff;
+                const name  = B_NAMES[ni];
+                map[BK[i]] = { id: name + oct_n, midi: midiOf(oct_n, B_SEMI[ni]) };
+            }
+            return map;
+        }
+
+        const pressedKeys = new Set();
+
+        document.addEventListener('keydown', e => {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            const k = e.key;
+
+            if (k === 'ArrowLeft')  { shiftOctave(-1); return; }
+            if (k === 'ArrowRight') { shiftOctave(1);  return; }
+
+            if (k === ' ') {
+                e.preventDefault();
+                if (!sustainOn) {
+                    sustainOn = true;
+                    document.getElementById('sustain-indicator').classList.add('on');
+                }
+                return;
+            }
+
+            if (e.repeat) return;
+            const kl = k.toLowerCase();
+            if (pressedKeys.has(kl)) return;
+            pressedKeys.add(kl);
+
+            const info = keyMap()[kl];
+            if (!info) return;
+            const el = document.querySelector(`[data-id="${info.id}"]`);
+            startNote(info.midi, info.id, el);
+        });
+
+        document.addEventListener('keyup', e => {
+            const k = e.key;
+
+            if (k === ' ') {
+                sustainOn = false;
+                document.getElementById('sustain-indicator').classList.remove('on');
+                releaseSustainPedal();
+                return;
+            }
+
+            const kl = k.toLowerCase();
+            pressedKeys.delete(kl);
+            const info = keyMap()[kl];
+            if (!info) return;
+            stopNote(info.id);
+        });
+
+        function shiftOctave(d) {
+            stopAll();
+            octave = Math.max(0, Math.min(7, octave + d));
+            document.getElementById('oct-display').textContent = octave;
+            build();
+        }
+
+        document.getElementById('oct-down').addEventListener('click', () => shiftOctave(-1));
+        document.getElementById('oct-up').addEventListener('click',   () => shiftOctave(1));
+
+        build();
+    })();
+    </script>
+</body>
+</html>
